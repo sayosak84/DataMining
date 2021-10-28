@@ -5,6 +5,8 @@ import pandas as pd
 import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
+from mpl_toolkits.mplot3d import Axes3D
+from sklearn.cluster import KMeans
 
 
 def correlation_circle(df,nb_var,x_axis,y_axis):
@@ -90,29 +92,27 @@ y = data["Country Code"]
 
 # plot instances on the first plan (first 2 factors)
 fig, axes = plt.subplots(figsize=(12,12))
-axes.set_xlim(-5,5)                 # on augmente les limites pour visualiser tout les pays
-axes.set_ylim(-5,5)
+axes.set_xlim(-10,10)                 # on augmente les limites pour visualiser tout les pays
+axes.set_ylim(-10,10)
 for i in range(n):
     plt.annotate(y.values[i],(coord[i,0],coord[i,1]))
-plt.plot([-5,5],[0,0],color='blue',linestyle='-',linewidth=1)
-plt.plot([0,0],[-5,5],color='blue',linestyle='-',linewidth=1)
+plt.plot([-10,10],[0,0],color='blue',linestyle='-',linewidth=1)
+plt.plot([0,0],[-10,10],color='blue',linestyle='-',linewidth=1)
 plt.title("ACP Factor 1 and 2")
 plt.ylabel("Factor 1")
 plt.xlabel("Factor 2")
-plt.show()
 plt.savefig('fig/acp_instances_1st_plan')
 plt.close(fig)
 
 
 # plot instances on the second plan (3rd and 4th factors)
 fig, axes = plt.subplots(figsize=(12,12))
-axes.set_xlim(-5,5)
-axes.set_ylim(-5,5)
+axes.set_xlim(-10,10)
+axes.set_ylim(-10,10)
 for i in range(n):
     plt.annotate(y.values[i],(coord[i,2],coord[i,3]))
-plt.plot([-5,5],[0,0],color='red',linestyle='-',linewidth=1)
-plt.plot([0,0],[-5,5],color='red',linestyle='-',linewidth=1)
-plt.show()
+plt.plot([-10,10],[0,0],color='red',linestyle='-',linewidth=1)
+plt.plot([0,0],[-10,10],color='red',linestyle='-',linewidth=1)
 plt.savefig('fig/acp_instances_2nd_plan')
 plt.close(fig)
 
@@ -134,3 +134,41 @@ for k in range(p):
 correlation_circle(data,p,0,1)
 
 correlation_circle(data,p,2,3)
+
+print("###################################")
+#Q6
+from R_square_clustering import r_square
+
+# ~ # choix du cluster effet coude (elbow)
+lst_k = range(2, 20)
+lst_rsq = []
+for k in lst_k:
+    est = KMeans(n_clusters=k)
+    est.fit(standarScaledData)
+
+    # est.labels = KMeans -> cluster labels for each instance of data
+    #			  Purity -> predected labels
+    lst_rsq.append(r_square(standarScaledData, est.cluster_centers_, est.labels_, k))  # 7 cluser pck coef trés grand 0.9
+
+fig = plt.figure()
+plt.plot(lst_k, lst_rsq, 'bx-')
+plt.xlabel('k')
+plt.ylabel('RSQ')
+plt.title('The Elbow Method showing the optimal k')
+plt.savefig('fig/k-means_elbow_method')
+plt.close()
+
+
+
+kmeans = KMeans(8, random_state=0)
+kmeans.fit_transform(standarScaledData)
+print(kmeans.labels_)
+ind = data['Country Name'].values
+print(ind)
+index = np.where(ind == 'France')
+a, = index[0]
+print(a)
+numCluster = kmeans.labels_
+print(kmeans.labels_[14])
+
+
