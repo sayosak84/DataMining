@@ -160,15 +160,46 @@ plt.close()
 
 
 
+#Q7
+listCountry = ['France', 'Mexico', 'Bulgaria']
 kmeans = KMeans(8, random_state=0)
 kmeans.fit_transform(standarScaledData)
-print(kmeans.labels_)
-ind = data['Country Name'].values
-print(ind)
-index = np.where(ind == 'France')
-a, = index[0]
-print(a)
-numCluster = kmeans.labels_
-print(kmeans.labels_[14])
+
+for country in listCountry:
+    clusterValues = data['Country Name'].values
+    indexCountry = np.where(clusterValues == country)
+    indexCountry = indexCountry[0][0]
+    print("Country : ", country ," ||  Cluster number", kmeans.labels_[indexCountry])
+    index = 0
+    listOfCountriesCluster = []
+    for clusterNumber in kmeans.labels_:
+        if (clusterNumber == kmeans.labels_[indexCountry]):
+            listOfCountriesCluster.append(data['Country Name'].values[index])
+        index = index + 1
+
+    print("\t Liste of countries in the same Cluster :",  listOfCountriesCluster)
 
 
+#Q8
+from scipy.cluster.hierarchy import dendrogram, linkage
+
+lst_labels = list(map(lambda pair: pair[0]+str(pair[1]), zip(data['Country Name'].values,data.index)))
+linkage_matrix = linkage(standarScaledData, 'ward')
+fig = plt.figure()
+dendrogram(
+    linkage_matrix,
+    color_threshold=0,
+    labels=lst_labels
+)
+plt.title('Hierarchical Clustering Dendrogram (Ward)')
+plt.xlabel('sample index')
+plt.ylabel('distance')
+plt.tight_layout()
+plt.savefig('fig/hierarchical-clustering')
+plt.close()
+
+#Q9
+
+#coupure 5 clusters verifier avec les graphs avant
+
+# ? pas d'achat
