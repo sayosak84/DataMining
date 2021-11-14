@@ -99,8 +99,8 @@ for i in range(n):
 plt.plot([-10,10],[0,0],color='blue',linestyle='-',linewidth=1)
 plt.plot([0,0],[-10,10],color='blue',linestyle='-',linewidth=1)
 plt.title("ACP Factor 1 and 2")
-plt.ylabel("Factor 1")
-plt.xlabel("Factor 2")
+plt.ylabel("Factor 2")
+plt.xlabel("Factor 1")
 plt.savefig('fig/acp_instances_1st_plan')
 plt.close(fig)
 
@@ -113,6 +113,9 @@ for i in range(n):
     plt.annotate(y.values[i],(coord[i,2],coord[i,3]))
 plt.plot([-10,10],[0,0],color='red',linestyle='-',linewidth=1)
 plt.plot([0,0],[-10,10],color='red',linestyle='-',linewidth=1)
+plt.title("ACP Factor 3 and 4")
+plt.ylabel("Factor 4")
+plt.xlabel("Factor 3")
 plt.savefig('fig/acp_instances_2nd_plan')
 plt.close(fig)
 
@@ -144,11 +147,11 @@ lst_k = range(2, 20)
 lst_rsq = []
 for k in lst_k:
     est = KMeans(n_clusters=k)
-    est.fit(standarScaledData)
+    est.fit(dataNoMissingValues)
 
     # est.labels = KMeans -> cluster labels for each instance of data
     #			  Purity -> predected labels
-    lst_rsq.append(r_square(standarScaledData, est.cluster_centers_, est.labels_, k))  # 7 cluser pck coef trés grand 0.9
+    lst_rsq.append(r_square(dataNoMissingValues, est.cluster_centers_, est.labels_, k))
 
 fig = plt.figure()
 plt.plot(lst_k, lst_rsq, 'bx-')
@@ -198,8 +201,3 @@ plt.tight_layout()
 plt.savefig('fig/hierarchical-clustering')
 plt.close()
 
-#Q9
-
-#coupure 5 clusters verifier avec les graphs avant
-
-# ? pas d'achat
